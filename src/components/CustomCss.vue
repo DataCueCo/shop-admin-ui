@@ -2,9 +2,10 @@
   <div id="tab-custom-css" v-loading="loading">
     <el-input
       type="textarea"
-      :autosize="{ minRows: 15, maxRows: 30}"
-      placeholder="Please enter your custom CSS"
-      v-model="css">
+      :autosize="{ minRows: 15, maxRows: 30 }"
+      placeholder="Enter any custom CSS styling here for your DataCue widgets"
+      v-model="css"
+    >
     </el-input>
     <el-button type="primary" round style="margin-top: 10px;" @click="handleSave">Save</el-button>
   </div>
@@ -18,13 +19,13 @@ export default {
   data() {
     return {
       loading: false,
-      css: '',
+      css: ''
     };
   },
   computed: {
     ...mapState({
-      currentStoreId: state => state.currentStoreId,
-    }),
+      currentStoreId: state => state.currentStoreId
+    })
   },
   methods: {
     fetchCss() {
@@ -36,13 +37,15 @@ export default {
         url: window.datacueURLs.getCustomCss,
         method: 'post',
         data: {
-          website_id: this.currentStoreId,
-        },
-      }).then((res) => {
-        this.css = res.data.content;
-      }).finally(() => {
-        this.loading = false;
-      });
+          website_id: this.currentStoreId
+        }
+      })
+        .then(res => {
+          this.css = res.data.content;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     handleSave() {
       this.loading = true;
@@ -51,30 +54,32 @@ export default {
         method: 'post',
         data: {
           website_id: this.currentStoreId,
-          css: this.css,
-        },
-      }).then((res) => {
-        if (res.status === 'ok') {
-          this.$notify({
-            title: 'Success',
-            message: 'The custom CSS are saved.',
-            type: 'success',
-          });
-        } else {
-          this.$notify.error({
-            title: 'Error!',
-            message: res.msg,
-          });
+          css: this.css
         }
-      }).finally(() => {
-        this.loading = false;
-      });
-    },
+      })
+        .then(res => {
+          if (res.status === 'ok') {
+            this.$notify({
+              title: 'Success',
+              message: 'Saved',
+              type: 'success'
+            });
+          } else {
+            this.$notify.error({
+              title: 'Error!',
+              message: res.msg
+            });
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    }
   },
   mounted() {
     if (this.currentStoreId > 0) {
       this.fetchCss();
     }
-  },
+  }
 };
 </script>

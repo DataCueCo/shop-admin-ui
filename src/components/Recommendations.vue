@@ -31,32 +31,32 @@ export default {
     return {
       form: {
         products_status_for_product_page: '0',
-        products_type_for_product_page: 'all',
+        products_type_for_product_page: 'all'
       },
-      loading: false,
+      loading: false
     };
   },
   computed: {
     ...mapState({
-      currentStoreId: state => state.currentStoreId,
+      currentStoreId: state => state.currentStoreId
     }),
     rules() {
       if (this.form.products_status_for_product_page === '1') {
         return {
           products_status_for_product_page: [
-            { required: true, message: 'this is required', trigger: 'blur' },
+            { required: true, message: 'this is required', trigger: 'blur' }
           ],
           products_type_for_product_page: [
-            { required: true, message: 'this is required', trigger: 'blur' },
-          ],
+            { required: true, message: 'this is required', trigger: 'blur' }
+          ]
         };
       }
       return {
         products_status_for_product_page: [
-          { required: true, message: 'this is required', trigger: 'blur' },
-        ],
+          { required: true, message: 'this is required', trigger: 'blur' }
+        ]
       };
-    },
+    }
   },
   methods: {
     fetchData() {
@@ -68,23 +68,25 @@ export default {
         url: window.datacueURLs.getRecommendations,
         method: 'post',
         data: {
-          website_id: this.currentStoreId,
-        },
-      }).then((res) => {
-        const form = { ...this.form };
-        if (res.data.products_status_for_product_page) {
-          form.products_status_for_product_page = res.data.products_status_for_product_page;
+          website_id: this.currentStoreId
         }
-        if (res.data.products_type_for_product_page) {
-          form.products_type_for_product_page = res.data.products_type_for_product_page;
-        }
-        this.form = form;
-      }).finally(() => {
-        this.loading = false;
-      });
+      })
+        .then(res => {
+          const form = { ...this.form };
+          if (res.data.products_status_for_product_page) {
+            form.products_status_for_product_page = res.data.products_status_for_product_page;
+          }
+          if (res.data.products_type_for_product_page) {
+            form.products_type_for_product_page = res.data.products_type_for_product_page;
+          }
+          this.form = form;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     handleSave() {
-      this.$refs.form.validate((valid) => {
+      this.$refs.form.validate(valid => {
         if (valid) {
           this.loading = true;
           request({
@@ -92,30 +94,32 @@ export default {
             method: 'post',
             data: {
               website_id: this.currentStoreId,
-              ...this.form,
-            },
-          }).then((res) => {
-            if (res.status === 'ok') {
-              this.$notify({
-                title: 'Success',
-                message: 'The recommendations are saved.',
-                type: 'success',
-              });
-            } else {
-              this.$notify.error({
-                title: 'Error!',
-                message: res.msg,
-              });
+              ...this.form
             }
-          }).finally(() => {
-            this.loading = false;
-          });
+          })
+            .then(res => {
+              if (res.status === 'ok') {
+                this.$notify({
+                  title: 'Success',
+                  message: 'Recommendation settings saved.',
+                  type: 'success'
+                });
+              } else {
+                this.$notify.error({
+                  title: 'Error!',
+                  message: res.msg
+                });
+              }
+            })
+            .finally(() => {
+              this.loading = false;
+            });
         }
       });
-    },
+    }
   },
   mounted() {
     this.fetchData();
-  },
+  }
 };
 </script>
