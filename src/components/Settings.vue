@@ -146,7 +146,7 @@ export default {
       });
     },
     handleDisconnect() {
-      this.$confirm('Are you sure to disconnect?', 'Hint', {
+      this.$confirm('Are you sure to disconnect?', 'Disconnect', {
         type: 'warning'
       })
         .then(() => {
